@@ -1,5 +1,5 @@
 // src/pages/Login.tsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, TextField, Typography, Snackbar, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -35,7 +35,7 @@ const Login = () => {
       return payload;
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         setSuccessOpen(true);
         setTimeout(() => navigate('/'), 800);
       },

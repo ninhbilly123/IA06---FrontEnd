@@ -1,5 +1,5 @@
 // src/pages/SignUp.tsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, TextField, Typography, Alert, Stack, Snackbar } from '@mui/material';
 import { useMutation } from 'react-query';
