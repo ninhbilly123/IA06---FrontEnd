@@ -1,7 +1,7 @@
 // src/pages/SignUp.tsx
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button, TextField, Typography, Alert, Stack, Snackbar } from '@mui/material';
+import { Button, TextField, Typography, Stack, Snackbar, Alert } from '@mui/material';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,15 +23,20 @@ const SignUp = () => {
 
   const mutation = useMutation(
     async (data: FormData) => {
-      const res = await fetch(`${API_URL}/user/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      const payload = await res.json();
+      let res: Response;
+      try {
+        res = await fetch(`${API_URL}/user/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+      } catch {
+        throw new Error('Network error');
+      }
+      let payload: any = null;
+      try { payload = await res.json(); } catch { /* ignore json parse errors */ }
       if (!res.ok || payload?.success === false) {
-        const message = payload?.message || 'Registration failed';
-        throw new Error(message);
+        throw new Error(payload?.message || `Registration failed (${res.status})`);
       }
       return payload;
     },
@@ -56,9 +61,7 @@ const SignUp = () => {
       <Typography variant="h4" gutterBottom>
         Sign Up
       </Typography>
-      {mutation.isError && (
-        <Alert severity="error">{errorMessage || 'An error occurred'}</Alert>
-      )}
+      {/* Snackbar sẽ hiển thị lỗi, bỏ Alert trùng lặp */}
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextField
           label="Email"
